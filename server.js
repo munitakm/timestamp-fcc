@@ -25,26 +25,22 @@ app.get("/api/hello", function (req, res) {
 });
 
 // PROJECT
-   const utcDate = (str) => {
-    str = str.toString().split(" ");
-   return `${str[0]}, ${str[2]} ${str[1]} ${str[3]} ${str[4]} GMT` 
-}
+app.get("/api/:date?", (req, res) => {
     const checkNumber = (str) => {
-      if(!str) return null;
-      if(str.length == str.match(/\d/g).length) {
+      if(str == undefined || str == "") return Date();
+      if(str == parseInt(str)) {
         return parseInt(str);
       } else {
       return str;
     }
   }
 
-app.get("/api/:date?", (req, res) => {
-  let datte = new Date(checkNumber(req.params.date));
+ let datte = new Date(checkNumber(req.params.date));
   if(datte == "Invalid Date") { 
-    res.json({error: "Invalid Date"});
+   res.json({ error: "Invalid Date"});
   } else {
-    res.json({unix: Date.parse(datte), utc: utcDate(Date(datte))})
-  }
+   res.json({ unix: Date.parse(datte), utc: datte.toUTCString()})
+  } 
 })
 
 // listen for requests :)
